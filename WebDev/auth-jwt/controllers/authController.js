@@ -4,13 +4,14 @@ const jwt = require('jsonwebtoken');
 // Error handling
 const handleErrors = (err) => {
 
-    // console.log(err.message, err.code);
+    console.log(err.message, err.code);
     let errors = {email: '', password: ''};
 
     // duplicate email errors
     if(err.code === 11000)
     {
         errors.email = 'Email already exists in database';
+        return errors;
     }
 
     // validation errors
@@ -18,10 +19,11 @@ const handleErrors = (err) => {
     {
         Object.values(err.errors).forEach( ({properties}) => {
 
-            errors[properties.path] = properties.value;
+            errors[properties.path] = properties.message;
 
         });
     }
+
 
     return errors;
 };
@@ -67,6 +69,8 @@ module.exports.signup_post = async (req,res) => {
     } catch (err) {
         
         const error = handleErrors(err);
+        console.log("From auth");
+        console.log(error);
         res.status(400).json({error});
 
     }

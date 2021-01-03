@@ -13,6 +13,8 @@
 
 <script>
     const form = document.querySelector('form');
+    const emailError = document.querySelector('.email.error');
+    const passwordError = document.querySelector('.password.error');
 
     form.addEventListener('submit', async (e) => {
 
@@ -20,6 +22,10 @@
 
         const email = form.email.value;
         const password = form.password.value;
+
+        //clearing errors
+        emailError.textContent = '';
+        passwordError.textContent = '';
 
         // console.log(email,password);
 
@@ -33,8 +39,22 @@
 
             });
 
+            const data = await result.json();
+            
+            if(data.error)
+            {
+                emailError.textContent = data.error.email;
+                passwordError.textContent = data.error.password;
+            }
+            
+            if(data.user)
+            {
+                location.assign('/');
+            }
+
         } catch (error) {
             
+
             console.log(error);
 
         }
