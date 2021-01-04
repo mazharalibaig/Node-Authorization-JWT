@@ -111,3 +111,10 @@ module.exports.login_post = async (req,res) => {
     }
 
 };
+
+module.exports.logout_get = (req,res) => {
+
+    res.cookie('jwt','', {maxAge: 0});
+    res.redirect('/');
+
+};
