@@ -12,18 +12,57 @@
 </form>
 
 <script>
+    
     const form = document.querySelector('form');
+    const emailError = document.querySelector('.email.error');
+    const passwordError = document.querySelector('.password.error');
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
 
         e.preventDefault();
 
         const email = form.email.value;
         const password = form.password.value;
 
-        console.log(email,password);
+        //clearing errors
+        emailError.textContent = '';
+        passwordError.textContent = '';
+
+        try {
+            
+            const result = await fetch('/login', {
+
+                method: 'POST',
+                body: JSON.stringify({ email , password }),
+                headers: {'Content-Type' : 'application/json'}
+
+            });
+
+            const data = await result.json();
+
+            console.log("From front");
+            console.log(data);
+            
+            if(data.error)
+            {
+                emailError.textContent = data.error.email;
+                passwordError.textContent = data.error.password;
+            }
+            
+            if(data.user)
+            {
+                location.assign('/');
+            }
+
+        } catch (error) {
+            
+
+            console.log(error);
+
+        }
 
     });
+
 </script>
 
 <%- include('partials/footer'); -%>
